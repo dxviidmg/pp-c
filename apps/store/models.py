@@ -1,6 +1,20 @@
 from app import db
+from sqlalchemy.inspection import inspect
 
-class Store(db.Model):
+class Serializer(object):
+
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
+
+
+class Store(db.Model, Serializer):
+
+    serialize_only = ('id', 'name')
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
@@ -10,7 +24,12 @@ class Store(db.Model):
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
-class Product(db.Model):
+    def serialize(self):
+        d = Serializer.serialize(self)
+#        del d['password']
+        return d
+
+class Product(db.Model, Serializer):
     id = db.Column(db.Integer, primary_key=True)
     sku = db.Column(db.String, unique=True)
     name = db.Column(db.String)
