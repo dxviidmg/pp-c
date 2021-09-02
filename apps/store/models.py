@@ -12,9 +12,6 @@ class Serializer(object):
 
 
 class Store(db.Model, Serializer):
-
-    serialize_only = ('id', 'name')
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
@@ -23,11 +20,6 @@ class Store(db.Model, Serializer):
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
-
-    def serialize(self):
-        d = Serializer.serialize(self)
-#        del d['password']
-        return d
 
 class Product(db.Model, Serializer):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,7 +33,7 @@ class Product(db.Model, Serializer):
     def __repr__(self):
         return '<id {}>'.format(self.id)
 
-class StoreProduct(db.Model):
+class StoreProduct(db.Model, Serializer):
     id = db.Column(db.Integer, primary_key=True)
     store_id = db.Column(db.Integer, db.ForeignKey('store.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
