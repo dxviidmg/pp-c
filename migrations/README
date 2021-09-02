@@ -1,1 +1,4 @@
 Single-database configuration for Flask.
+
+* Run: python main.py
+*load data: http://127.0.0.1:5000/load_data
